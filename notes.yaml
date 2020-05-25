@@ -1,0 +1,17 @@
+https://medium.com/analytics-vidhya/getting-started-with-postgresql-using-docker-compose-34d6b808c47c
+
+https://medium.com/analytics-vidhya/getting-started-with-postgresql-using-docker-compose-34d6b808c47c
+
+
+
+PSQL:
+  connect:
+    psql --host=database --username=user --dbname=databasename
+
+    CREATE TABLE users (
+    id serial PRIMARY KEY,
+    email VARCHAR (355) UNIQUE NOT NULL,
+    password VARCHAR (50) NOT NULL
+    );
+
+    INSERT INTO users (email, password) VALUES ('test@mail.com', '12345');

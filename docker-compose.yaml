@@ -1,0 +1,16 @@
+version: '3'
+services:
+  api: 
+    container_name: api
+    image: "smarman/ubuntudev:0.1.7"
+    volumes:
+      - ./golang:/srv
+    command: ["tail", "-f", "/dev/null"]
+  database:
+    container_name: psql
+    image: "postgres"
+    env_file:
+      - psql.env
+
+volumes:
+  golang:

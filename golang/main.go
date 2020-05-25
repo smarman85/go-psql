@@ -10,21 +10,15 @@ import (
 	_ "github.com/lib/pq"
 )
 
-//const (
-//  //err := godotenv.Load(".env")
-//  //fmt.Println(os.Getenv(
-//	// TODO fill this in directly or through environment variable
-//	// Build a DSN e.g. postgres://username:password@url.com:5432/dbName
-//)
-
 type User struct {
 	ID       int
 	Email    string
 	Password string
 }
 
-func main() {
-
+func dbConnection() string {
+  // TODO fill this in directly or through environment variable
+  // Build a DSN e.g. postgres://username:password@url.com:5432/dbName
   //set connection string:
   err := godotenv.Load(".env")
   if err != nil {
@@ -35,7 +29,7 @@ func main() {
   host := os.Getenv("PSQL_HOST")
   db := os.Getenv("PSQL_DB")
 
-  DB_DSN := fmt.Sprintf(
+  psqlConn := fmt.Sprintf(
     "postgres://%v:%v@%v:5432/%v?sslmode=disable",
     user,
     pass,
@@ -43,18 +37,25 @@ func main() {
     db,
   )
 
+  return psqlConn
+}
+
+func main() {
+
+  DB_DSN := dbConnection()
+
 	// Create DB pool
-	pdb, err := sql.Open("postgres", DB_DSN)
+	db, err := sql.Open("postgres", DB_DSN)
 	if err != nil {
 		log.Fatal("Failed to open a DB connection: ", err)
 	}
-	defer pdb.Close()
+	defer db.Close()
 
 	// Create an empty user and make the sql query (using $1 for the parameter)
 	var myUser User
 	userSql := "SELECT id, email, password FROM users WHERE id = $1"
 
-	err = pdb.QueryRow(userSql, 1).Scan(&myUser.ID, &myUser.Email, &myUser.Password)
+	err = db.QueryRow(userSql, 1).Scan(&myUser.ID, &myUser.Email, &myUser.Password)
 	if err != nil {
 		log.Fatal("Failed to execute query: ", err)
 	}
